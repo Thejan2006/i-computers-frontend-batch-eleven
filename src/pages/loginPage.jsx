@@ -1,30 +1,50 @@
-import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { BiKey } from "react-icons/bi";
 import { BsGoogle } from "react-icons/bs";
 import { MdEmail } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../utils/api";
 
 export default function LoginPage(){
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [loading, setLoading] = useState(false)
+
+    const navigate = useNavigate()
 
     async function handleLogin(){
-        toast.success("Email: " + email + " Password: " + password)
-        try{
-            const res = await axios.post("http://localhost:3000/users/login",
-                {
-                    email : email,
-                    password : password
-                }
-            )
-            console.log(res)
-        }catch(err){
-            console.log(err)
-            toast.error("Login Failed")
-        }
         
+        setLoading(true)
+
+        try{
+            const res = await api.post("/users/login",{
+                email : email,
+                password : password
+            })
+
+            localStorage.setItem("token" , res.data.token)
+
+            if(res.data.isAdmin){
+
+                //window.location.href = "/admin"
+
+                navigate("/admin")
+
+            }else{
+
+                //window.location.href = "/"
+
+                navigate("/")
+
+            }
+
+        }catch(err){
+
+            toast.error(  err?.response?.data?.message || "Login failed" )
+
+        }
+        setLoading(false)
     }
   
     return (
@@ -59,11 +79,14 @@ export default function LoginPage(){
                     className="w-full h-[40px] rounded-md px-2 border border-white" placeholder="•••••••••••"/>
                 </div>
                 <p className="w-full h-2 text-white text-right italic">Forget your password? click <Link to="/forget-password" className="font-bold text-accent">Here</Link> </p>
-                <button className="w-full h-[50px] bg-accent mt-10 text-white rounded-lg" onClick={handleLogin}>Sign In</button>
+                <button disabled={loading} className="w-full h-[50px] bg-accent mt-10 text-white rounded-lg" onClick={handleLogin}>
+                    {
+                        loading ? "Loading..." : "Login"
+                    }
+                </button>
                 <p className="w-full h-2 text-white text-right italic ">Don't have an account? click <Link to="/register" className="font-bold text-accent">Here</Link> </p>
                 <button className="w-full h-[50px] bg-secondary mt-5 text-white rounded-lg flex justify-center items-center gap-2"><BsGoogle/> Sign In with Google</button>
             </div>
-
         </div>
     )
 }
