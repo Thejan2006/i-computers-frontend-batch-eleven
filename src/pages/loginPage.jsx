@@ -46,7 +46,7 @@ export default function LoginPage(){
         }
         setLoading(false)
     }
-  
+
     return (
         <div className="w-full h-full bg-[url('/login-bg.jpg')] bg-cover bg-no-repeat flex justify-center items-center">
 

@@ -3,6 +3,7 @@ import { FiShoppingCart } from "react-icons/fi";
 import { TbUsers } from "react-icons/tb";
 import { Link, Route, Routes } from "react-router-dom";
 import AdminProductsPage from "./admin/adminProductPage";
+import AdminAddProductForm from "./admin/adminAddProductForm";
 
 export default function AdminPage(){
     return(
@@ -37,6 +38,7 @@ export default function AdminPage(){
                     <Route path="/" element={<h1>Orders Page</h1>}/>
                     <Route path="/products" element={<AdminProductsPage/>}/>
                     <Route path="/users" element={<h1>Users Page</h1>}/>
+                    <Route path="/add-product" element={<AdminAddProductForm/>}/>
                 </Routes>
             </div>
         </div>
